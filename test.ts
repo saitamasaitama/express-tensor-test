@@ -1,8 +1,9 @@
 import express from 'express';
 import * as fs from 'fs';
 import * as tf from '@tensorflow/tfjs-node'
-import Antirectifier from './custom_layer'
-import EightBit from './EightBit';
+//import Antirectifier from './custom_layer'
+//import EightBit from './EightBit';
+import Image2Vec from './layers/Image2Vec';
 
 //require('@tensorflow/tfjs-node-gpu');
 
@@ -50,7 +51,7 @@ layers.add(tf.layers.maxPooling2d({
   poolSize: [3, 2]
 })
 );
-layers.add(new EightBit({}));
+layers.add(new Image2Vec({}));
 //layers.add(new Antirectifier());
 //layers.add(tf.layers.flatten());
 

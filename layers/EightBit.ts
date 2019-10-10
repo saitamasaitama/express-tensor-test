@@ -11,6 +11,11 @@ class EightBit extends tf.layers.Layer {
 
   /**
   結果を固定のサイズにする
+  ファミコン:
+  256 x 224 x 3
+  GB:
+  160 x 144 x 1
+  
    * @param {*} inputShapes
    */
   public computeOutputShape(inputShape: number[])
@@ -39,7 +44,7 @@ class EightBit extends tf.layers.Layer {
     return tf.zeros([256, 224, 3]);
   }
 
-  static get className() { return 'Antirectifier'; }
+  static get className() { return 'EightBit'; }
 }
 
 
