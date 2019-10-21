@@ -1,0 +1,79 @@
+html
+  //- ヘッダ　ここから
+  head 
+    
+    script( src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous" )
+    link( rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" )
+    script( src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous" )
+    script( src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous" )
+    script( src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous" )
+    link( rel="stylesheet" href="/style.css" )
+    // script( src="/test.js" ) 
+    title テスト
+  //- ヘッダ　ここまで
+  body
+    h1.h1 LayerEditor
+
+    //- 最新情報    
+    div.container.bg-light.border-info #{message}
+
+    
+    div.container.bg-light.border-info
+      h2 Model
+      form( method="POST" action="/" )
+        button( onClick="alert(1);" ) Save
+        button( onClick="" ) Load
+
+      //- INPUT
+      div.container.bg-light.border-info
+        h3 input
+        p
+          span Shape: #{inputs} <br>
+          span Total: #{(inputs.reduce((carry,item)=>carry*item,1) )}
+      //- input ここまで
+
+      //- レイヤ一覧　ここから
+      div.container.bg-light.border-info
+        h3 layers
+
+        ul.list-group
+          each item in layers
+            li.list-group-item
+              label 
+                span Layer-Name: #{item.name} <br>
+                span Layer-Class: #{item.constructor.name} 
+                form( method="POST"  )
+                  button.form-control modify 
+                  button.form-control del
+          li.list-group-item
+            button.form-control.btn-primary 追加
+
+        //- UL ここまで
+      //-レイヤ一覧　ここまで
+
+      //-ボタン
+      div.container.bg-light.border-info
+        h3 output
+        p 出力
+          span #{(model==null?"None":model.output.shape.reduce((carry,item)=>{carry+=("|"+item);return carry;},""))}
+
+
+    //- レイヤ
+    div.container.d-none
+      h3 レイヤ追加
+      form( method="POST" action="/layer-add" )
+        //- ここにレイヤ一覧選択が入る
+        button( ) レイヤ追加
+    
+    //- 変更
+    div.container.d-none
+      h3 レイヤ変更
+      form( method="POST" action="/layer-modify" )
+        button( ) レイヤ変更
+
+    //- データ入力
+    div.container.d-none
+      h3 入力
+      form( method="POST" action="/data-input" )
+        button( ) 入力
+

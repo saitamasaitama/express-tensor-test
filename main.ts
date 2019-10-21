@@ -2,31 +2,38 @@ import express from 'express';
 import * as tf from '@tensorflow/tfjs-node'
 require('@tensorflow/tfjs-node-gpu');
 const port = 3000;
-tf.fromPixels(info.data);
 
 const app = express();
 app.set('view engine', 'pug');
 app.use(express.static('public'));
 
-console.dir(tf.fromPixels('image'));
 
-var model:tf.LayersModel|undefined=undefined;
+var $model:tf.LayersModel;
 
-const $inputShape:number[] = [2];
+const $inputShape:number[] = [2,3,4];
 const $input:tf.SymbolicTensor = tf.input({shape:$inputShape});
-const $layers:tf.layers.Layer[]=[];
+const $layers:tf.layers.Layer[]=[
+      tf.layers.dense({
+        units:12,
+        name:"Default"
+      })
+    ];
 
 const OUT="";
 
-function modelReBuild(){
-  const result=tf.sequential();
-  result.add(tf.layers.inputLayer({
-    inputShape:$inputShape
-  }));
-  result.add(tf.layers.dense({
-    units:4
-  }));
+var $message="特に無し";
 
+function modelReBuild(){
+  const result=tf.sequential({
+    layers:[
+      tf.layers.inputLayer({inputShape:$inputShape})
+    ]
+  });
+
+  $layers.forEach($layer=>{
+    console.log(`LAYER-Add:${$layer.name}`);
+    result.add($layer);
+  });
 
   return tf.model({
     inputs:$input,
@@ -35,22 +42,41 @@ function modelReBuild(){
 }
 
 app.get('/', (req:any, res:any)=>{
-   return res.render('test',{})
+   return res.render('index',{
+    inputs:$inputShape,
+    layers:$layers,
+    model:$model,
+    message:$message,
+   })
 });
 
 app.get('/dump', (req:any, res:any)=>{
-   model=modelReBuild();
-   return res.send(model);
+   $model=modelReBuild();
    return res.send(
-    (model.predict(tf.ones([1,2])) as tf.Tensor).toString()
+    ($model.predict(tf.ones([1,2])) as tf.Tensor).toString()
   );
+});
+app.get('/reset', (req:any, res:any)=>{
+  $layers.length=0;
+  $model=modelReBuild();
+  return res.send(
+   ($model.predict(tf.ones([1,2])) as tf.Tensor).toString()
+ );
 });
 
 app.post('/', (req:any, res:any)=>{
+    $layers.push(tf.layers.dense({
+      units:1,
+      name:"AddLayer"+Math.random().toString(36).slice(-8)
+    }));
     //便宜的にモデルを再構築
-    console.log("モデル再構築:");  
+    console.log("モデル再構築:");
+    const d=new Date();
+     $message="モデル再構築"+d;
+    $model=modelReBuild();
+    
     //再学習
-    return res.render('test',{});
+    return res.redirect('/');
   }
 );
 
@@ -59,9 +85,12 @@ app.post('/', (req:any, res:any)=>{
 
 //実行
 app.post('/run',(req:any,res:any)=>{});
+app.post('/layer-add',(req:any,res:any)=>{
+  $layers.push(tf.layers.dense({
+    units:1,
+    name:"AddLayer"
+  }));
+  return res.redirect("/");
+});
 app.listen(port,() => console.log(`ポート${port}番で処理開始`));
-
-
-//(model.predict(tf.ones([1,2])) as tf.Tensor).print();
-//model.pred
 
