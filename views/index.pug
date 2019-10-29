@@ -24,12 +24,22 @@ html
         button( onClick="alert(1);" ) Save
         button( onClick="" ) Load
 
+      form( method="POST" action="/save-model" )
+        button( onClick="return confirm('is reset?');" ) Save
+      form( method="POST" action="/load-model" )
+        input( type="file" )
+        button(  ) Load
+      form( method="POST" action="/reset" )
+        button( onClick="return confirm('is reset?');" ) Reset
+
       //- INPUT
       div.container.bg-light.border-info
         h3 input
         p
           span Shape: #{inputs} <br>
           span Total: #{(inputs.reduce((carry,item)=>carry*item,1) )}
+        form( method="POST" action="/" )
+        
       //- input ここまで
 
       //- レイヤ一覧　ここから
@@ -38,13 +48,8 @@ html
 
         ul.list-group
           each item in layers
-            li.list-group-item
-              label 
-                span Layer-Name: #{item.name} <br>
-                span Layer-Class: #{item.constructor.name} 
-                form( method="POST"  )
-                  button.form-control modify 
-                  button.form-control del
+            include include/layer.pug
+          //- 末尾行
           li.list-group-item
             button.form-control.btn-primary 追加
 

@@ -10,19 +10,18 @@ app.use(express.static('public'));
 
 var $model:tf.LayersModel;
 
-const $inputShape:number[] = [2,3,4];
+const $inputShape:number[] = [32,32,3];
 const $input:tf.SymbolicTensor = tf.input({shape:$inputShape});
 const $layers:tf.layers.Layer[]=[
       tf.layers.dense({
         units:12,
-        name:"Default"
+        name:"Default",
+        activation:'relu'
       })
     ];
-
 const OUT="";
 
 var $message="特に無し";
-
 function modelReBuild(){
   const result=tf.sequential({
     layers:[
@@ -56,12 +55,10 @@ app.get('/dump', (req:any, res:any)=>{
     ($model.predict(tf.ones([1,2])) as tf.Tensor).toString()
   );
 });
-app.get('/reset', (req:any, res:any)=>{
+app.post('/reset', (req:any, res:any)=>{
   $layers.length=0;
   $model=modelReBuild();
-  return res.send(
-   ($model.predict(tf.ones([1,2])) as tf.Tensor).toString()
- );
+  return res.redirect('/');
 });
 
 app.post('/', (req:any, res:any)=>{
@@ -81,10 +78,10 @@ app.post('/', (req:any, res:any)=>{
 );
 
 
-//パラメータチェンジ
 
 //実行
 app.post('/run',(req:any,res:any)=>{});
+
 app.post('/layer-add',(req:any,res:any)=>{
   $layers.push(tf.layers.dense({
     units:1,
@@ -93,4 +90,5 @@ app.post('/layer-add',(req:any,res:any)=>{
   return res.redirect("/");
 });
 app.listen(port,() => console.log(`ポート${port}番で処理開始`));
+
 
