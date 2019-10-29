@@ -1,0 +1,16 @@
+li.list-group-item
+  label
+    span Layer-Name: #{item.name} <br>
+    span Layer-Class: #{item.constructor.name}
+    case item.constructor.name
+      when 'Dense'
+        p 
+          | Units:#{item.units}<br>
+        each act in item.activation
+          p Activation: #{act.name}
+      default
+        p どれでもない
+    form( method="POST"  )
+      button.form-control modify
+      button.form-control del
+
