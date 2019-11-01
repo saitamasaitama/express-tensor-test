@@ -1,0 +1,12 @@
+ul.inline,li.inline{
+  display:inline-block;
+}
+
+li.bit{
+  display:inline-block;
+  min-width:1vmin;
+  min-height:1vmin;
+  background-color:gray;
+  margin-left:0.1vmin;
+  margin-bottom:0.1vmin;
+}

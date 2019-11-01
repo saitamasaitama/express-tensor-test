@@ -77,8 +77,6 @@ app.post('/', (req:any, res:any)=>{
   }
 );
 
-
-
 //実行
 app.post('/run',(req:any,res:any)=>{});
 
@@ -92,3 +90,6 @@ app.post('/layer-add',(req:any,res:any)=>{
 app.listen(port,() => console.log(`ポート${port}番で処理開始`));
 
 
+app.get('/test',(req,res)=>res.render("include/2dA",{
+  tensor:tf.ones([3,4,5])
+}));
