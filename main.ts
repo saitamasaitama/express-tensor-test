@@ -1,11 +1,47 @@
 import express from 'express';
+import multer from 'multer';
+import * as fs from 'fs'
 import * as tf from '@tensorflow/tfjs-node'
+import { selu, Tensor } from '@tensorflow/tfjs-node';
 require('@tensorflow/tfjs-node-gpu');
 const port = 3000;
+
+/**
+ * デバッグ用
+ */
+function dd($obj:any){
+  console.dir($obj);
+  
+}
+
+/**
+ * 画像関連処理用
+ */
+
+function image2tensor(
+  $file: string,
+  $resize:[number,number]=[97,97]
+): tf.Tensor3D {
+  try{
+  const $image= tf.node.decodeImage(
+      fs.readFileSync($file)
+  ) as tf.Tensor3D;
+  return $image;
+ }catch($e){
+    console.log(`E:${$file}`);
+    return tf.zeros([97,97,1]);
+  }
+}
+
+interface fromto{
+  from:Tensor,
+  to:Tensor,
+}
 
 const app = express();
 app.set('view engine', 'pug');
 app.use(express.static('public'));
+const upload=  multer({ dest: './uploads/' });
 
 
 var $model:tf.LayersModel;
@@ -93,3 +129,67 @@ app.listen(port,() => console.log(`ポート${port}番で処理開始`));
 app.get('/test',(req,res)=>res.render("include/2dA",{
   tensor:tf.ones([3,4,5])
 }));
+
+
+app.post('/file-up', upload.single('image'), (req, res, next) => {
+  
+  
+
+  const tensor=tf.image.resizeBilinear(image2tensor(req.file.path),[60,60]);
+
+  const $input=tf.input({shape:tensor.shape});
+  const gray= tf.layers.dense({
+    inputShape:tensor.shape,
+    units:1,
+    useBias:true,
+    weights:[
+      tf.ones([3,1]).div(3),
+      tf.ones([1]).div(3),
+    ],
+    activation:'relu',
+    batchSize:255,
+  });
+
+  const gray2=tf.layers.conv2d({
+    inputShape:tensor.shape,
+    kernelSize:2,
+    filters:1,
+    weights:[
+      tf.ones([2,2,3,1]).div(12)
+    ],
+    batchSize:255,
+    useBias:false,
+    activation:'relu',
+    padding:'same'
+  });
+  const avg=tf.layers.averagePooling2d({
+    inputShape:tensor.shape,
+    poolSize:[3,3],
+    strides:1,
+  });
+
+  const max=tf.layers.maxPooling2d({
+    inputShape:tensor.shape,
+    poolSize:[2,2],
+    strides:1,
+  });
+
+  console.dir(gray2.apply(tf.stack([tensor])));
+
+  return res.render("include/2dA",{
+    req:req.file,
+    images:[
+      tensor,
+      gray.apply(tensor),
+      gray2.apply(tf.stack([tensor])),
+      avg.apply(tf.stack([tensor])),
+      
+      max.apply(tf.stack([tensor])),
+    ],
+    tensor:tensor
+  });
+});
+
+
+
+

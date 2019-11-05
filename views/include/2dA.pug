@@ -3,9 +3,35 @@ head
   link( rel="stylesheet" href="/tensor.css" )
 
 body
-  ul.list-group.inline(  )
-    each i in tensor
-      each j in i
-        li.bit(  )
-          //-span.j( style="font-size:5px;" ) #{j}
-      br
+  //- Tensor3D (3チャンネル)
+
+  each image in images
+    div.container-fluid
+      p #{image.shape}
+      //-p #{image}
+      //-p #{image.shape.length}
+      ul.list-group.inline(  )
+        //- 次元を調べてスタック解除
+        
+        - const image3d = 3 < image.shape.length?image.unstack()[0]:image;
+
+        
+        //- if(3 < image.shape.length ){ image=image.unstack(); }
+        each ten1 in image3d.unstack()
+          each ten2 in ten1.unstack()
+
+            - const RGB = ten2.dataSync();
+            //- RGB or Gray
+            case RGB.length
+              when 3
+                li.bit.RGB( style=`background-color:rgb(${RGB[0]},0,0);` )
+                  //-style=`background-color:hsla(0,${RGB[0]*100}%,50%,1);` )
+                li.bit.RGB( style=`background-color:rgb(0,${RGB[1]},0);` )
+                  //- style=`background-color:hsla(90,${RGB[0]*100}%,50%,1);` )
+                li.bit.RGB( style=`background-color:rgb(0,0,${RGB[2]});` )
+                  //- style=`background-color:hsla(270,${RGB[0]*100}%,50%,1);` )
+              when 1
+                li.bit.Gray( style=`background-color:hsl(0,0%,${RGB[0]*0.4}%);` )
+          br
+    
+  

@@ -8,6 +8,13 @@ html
   body
     h1.h1 LayerEditor
 
+    include include/menues 
+
+    div
+      form( method="POST" action="/file-up" enctype="multipart/form-data" )
+        input( type="file" name="image")
+        button upload
+
     //- 最新情報    
     div.container.bg-light.border-info #{message}
 
