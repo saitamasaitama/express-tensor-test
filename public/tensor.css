@@ -2,6 +2,8 @@ ul.inline,li.inline{
   display:inline-block;
 }
 
+
+
 li.bit{
   display:inline-block;
   min-width:1vmin;
@@ -37,4 +39,13 @@ li.Gray{
   max-height:1vmin;
   margin-left:0;
   margin-bottom:0.0vmin;
+}
+
+table.full{
+  margin: 0;
+
+}
+table.full th{
+  text-align: center;
+  background-color: azure;
 }

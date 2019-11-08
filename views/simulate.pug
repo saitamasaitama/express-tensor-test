@@ -1,0 +1,20 @@
+//- レイヤシミュレータを作成する
+//- 基本は[ オリジン - 現レイヤ - レイヤ出力 ]をリスト表示する
+head
+  include include/header
+  link( rel="stylesheet" href="/tensor.css" )
+body
+  table.table.full
+    thead
+      tr
+        th ORIGIN
+        th CURRENT
+        th INPUT
+        th OUTPUT
+    each result in sim.Simulate()
+      tr
+        each d in [ result.origin,result.current,result.input,result.output ]
+          td 
+            include include/tensor2image
+
+          //- 現在のデータ

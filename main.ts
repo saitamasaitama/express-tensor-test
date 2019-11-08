@@ -3,6 +3,9 @@ import multer from 'multer';
 import * as fs from 'fs'
 import * as tf from '@tensorflow/tfjs-node'
 import { selu, Tensor } from '@tensorflow/tfjs-node';
+import * as routes from './routes'
+import simulator from './classes/modelSimulator'
+
 require('@tensorflow/tfjs-node-gpu');
 const port = 3000;
 
@@ -41,6 +44,7 @@ interface fromto{
 const app = express();
 app.set('view engine', 'pug');
 app.use(express.static('public'));
+
 const upload=  multer({ dest: './uploads/' });
 
 
@@ -130,10 +134,16 @@ app.get('/test',(req,res)=>res.render("include/2dA",{
   tensor:tf.ones([3,4,5])
 }));
 
+app.get('/sim',(req,res)=>{
+
+  const sim:simulator = new simulator(tf.sequential());
+  return res.render("simulate",{
+    sim:sim
+  });
+});
+
 
 app.post('/file-up', upload.single('image'), (req, res, next) => {
-  
-  
 
   const tensor=tf.image.resizeBilinear(image2tensor(req.file.path),[60,60]);
 
@@ -189,7 +199,3 @@ app.post('/file-up', upload.single('image'), (req, res, next) => {
     tensor:tensor
   });
 });
-
-
-
-
