@@ -3,7 +3,7 @@ import multer from 'multer';
 import * as fs from 'fs'
 import * as tf from '@tensorflow/tfjs-node'
 import { selu, Tensor } from '@tensorflow/tfjs-node';
-import * as routes from './routes'
+import routes from './routes'
 import simulator from './classes/modelSimulator'
 
 require('@tensorflow/tfjs-node-gpu');
@@ -14,7 +14,7 @@ const port = 3000;
  */
 function dd($obj:any){
   console.dir($obj);
-  
+
 }
 
 /**
@@ -42,10 +42,18 @@ interface fromto{
 }
 
 const app = express();
+const upload=  multer({ dest: './uploads/' });
 app.set('view engine', 'pug');
 app.use(express.static('public'));
 
-const upload=  multer({ dest: './uploads/' });
+/*
+ルーター読み込み
+*/
+Object.keys(routes).forEach(k=>{
+  console.log(`BEFORE USE ${k}`);
+  console.dir(routes[k]);
+  app.use(`/${k}`,routes[k]);
+});
 
 
 var $model:tf.LayersModel;
