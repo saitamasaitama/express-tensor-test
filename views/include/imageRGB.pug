@@ -1,0 +1,10 @@
+//- image3d( [N,N,N] ) が渡っているという前提。カラー
+
+each ten1 in image3d.unstack()
+  each ten2 in ten1.unstack()
+    - const RGB = ten2.dataSync();
+    //- RGB or Gray
+    li.bit.RGB( style=`background-color:rgb(${RGB[0]},0,0);` )
+    li.bit.RGB( style=`background-color:rgb(0,${RGB[1]},0);` )
+    li.bit.RGB( style=`background-color:rgb(0,0,${RGB[2]});` )
+  br

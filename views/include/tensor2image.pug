@@ -1,10 +1,34 @@
       
 - //末尾のshapeが3ならカラー,1ならグレイスケール
 
+ul.list-group.inline(  )
 
-if 3 ==d.shape[d.shape.length-1] 
-  //- 長さ3未満なので画像ではない？
-  p カラー
-else
-  p モノクロ
-  
+case d.shape.length
+  when 1
+    p 一次元
+  when 2
+    p 二次元
+  when 3
+    p 三次元（通常のイメージ）
+    - const image3d = d;
+
+    //- ima
+    if 3 ==d.shape[d.shape.length-1]
+      p カラー
+      include include/imageRGB
+    else
+      //- 長さ3未満なので画像ではない？
+      p モノクロ
+    //- 画像処理　ここまで
+  when 4
+    p アニメーション？
+    each image3d in d.unstack()
+      p anim
+      case d.shape[d.shape.length-1]
+        when 1
+          p 3
+        when 3
+          
+      include include/image
+  default
+    p 次元不明

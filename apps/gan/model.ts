@@ -1,5 +1,13 @@
 import * as tf from '@tensorflow/tfjs-node'
 
+
+function main(){
+  //ラベル1個でトレーニング
+  const model=tf.sequential();
+
+
+}
+
 interface GANOpts{
   name:string,
   label_size:number,
@@ -13,7 +21,9 @@ interface GANOut{
 
 function GAN(opts:GANOpts):GANOut
 {
+
   const out_size=opts.output_shape.reduce((carry,item)=>carry*item,1);
+
   console.dir(out_size);
   
   const $g =tf.sequential({
@@ -24,7 +34,6 @@ function GAN(opts:GANOpts):GANOut
         activation:'relu'
       })
       //最終レイヤ(x y zにする )
-
     ]
   });
   //画像を入れて判定する奴
@@ -67,8 +76,11 @@ export {
 }
 */
 
+/*
 GAN({
    name:"a",
   label_size:3,
   output_shape:[20,20,3]
 })
+*/
+

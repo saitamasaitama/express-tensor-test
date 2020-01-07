@@ -1,0 +1,8 @@
+//- image3d( [N,N,1] ) が渡っているという前提。モノクロ
+
+each ten1 in image3d.unstack()
+  each ten2 in ten1.unstack()
+    - const mono = ten2.dataSync()[0];
+    //- RGB or Gray
+    li.bit.Mono( style=`background-color:hsl(0,0%,${mono*0.4}%);` )
+  br

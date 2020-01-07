@@ -2,6 +2,8 @@ import express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 
+//controller以下のすべてのtsを読み込む
+
 
 interface routesInterface {
   [key:string]:any
@@ -19,6 +21,5 @@ fs.readdirSync("./controller/").forEach(
       
     }
 });
-console.log("ROUTE DONE");
 
 export default routes;

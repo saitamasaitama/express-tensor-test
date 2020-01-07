@@ -15,10 +15,10 @@ class modelSimulator{
 
     const result:layerSimulateResult[]=[
       {
-        input:tf.ones([10,10,3]),
+        input:tf.ones([1,10,10,3]),
         output:tf.ones([10,10,1]),
-        current:tf.ones([10,10,1]),
-        origin:tf.ones([10,10,3]),
+        current:tf.ones([1,10,10,1]),
+        origin:tf.ones([2,10,10,3]),
         fromLayer:tf.layers.dense({units:3}),
         toLayer:tf.layers.dense({units:6})
       }
